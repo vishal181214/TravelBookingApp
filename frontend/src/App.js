@@ -1,5 +1,5 @@
 import "./App.css";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./components/Home";
 import BookedScreen from "./components/BookedScreen";
@@ -10,6 +10,17 @@ import SignUp from "./components/SignUp";
 import UserDetails from "./components/UserDetails";
 import AdminScreen from "./components/AdminScreen";
 function App() {
+  const [res, setResult] = useState();
+
+  useEffect(()=>{
+    const data = JSON.parse(localStorage.getItem('user'));
+    // (data !== null) ? setResult(data.data.isAdmin) : setResult(false);
+    if(data !== null)
+    {
+      setResult(data.data.isAdmin);
+    }
+  },[]);
+
   return (
     <BrowserRouter>
       <Routes>
@@ -20,7 +31,11 @@ function App() {
         <Route path='/SignUp' element={<SignUp/>}/>
         <Route path='/*' element={<Error/>}/>
         <Route path='/userdetails' element={<UserDetails/>}/>
-        <Route path='/admin' element={<AdminScreen/>}/>
+        {
+          (res) ? <Route path='/admin' element={<AdminScreen/>}/> :
+          <Route path='/' element={<Home/>} />
+        }
+        
       </Routes>
     </BrowserRouter>
   );
