@@ -30,7 +30,7 @@ function App() {
         <Route path='/LogIn' element={<LogIn/>}/>
         <Route path='/SignUp' element={<SignUp/>}/>
         <Route path='/*' element={<Error/>}/>
-        <Route path='/userdetails' element={<UserDetails/>}/>
+        <Route path='/userdetails/:info' element={<UserDetails/>}/>
         {
           (res) ? <Route path='/admin' element={<AdminScreen/>}/> :
           <Route path='/' element={<Home/>} />
