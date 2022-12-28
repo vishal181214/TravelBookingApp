@@ -32,7 +32,7 @@ export default function UserDetails() {
           {
             ans.map((i)=>{             
               return(
-                <UserBookInfo key={i} />
+                <UserBookInfo index={i} />
               )})
           }
             <h5 style={{ marginTop: "1vh" }}>Contact Details</h5>

@@ -27,10 +27,10 @@ export default function Bus() {
         const seatData = `${info.busId}`+seat;
         const ans =selectSeat.includes(seatData);
         if(ans){
-            console.log("data is Available");
+            // console.log("data is Available");
             setSelectSeat(selectSeat.filter((item) => item !== seatData));
         }else{
-            console.log("data is not Available");
+            // console.log("data is not Available");
             selectSeat.push(seatData);
         }
         console.log(selectSeat);
@@ -66,7 +66,7 @@ export default function Bus() {
                     <table className='busTable'>
                         <tr style={{ height: "5rem" }}>
                             <td onClick={()=>{seatHandle('A11')}}>
-                                <div className="seat" 
+                                <div className="seat"  
                                     style={{backgroundColor: ((selectSeat.includes(`${info.busId}`+'A11'))) ? "pink": " "}}>
                                 </div>
                             </td>

@@ -1,0 +1,18 @@
+[
+    {
+      fullName: { type: String, required: true },
+      gender: { type: String, required: true },
+      age: { type: Number, required: true },
+      seatId: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
+
+
+  custInfo:[{
+    name: req.body.details.name,
+    age: req.body.details.age,
+    gender: req.body.details.gender
+}],
