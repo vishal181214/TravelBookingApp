@@ -18,7 +18,7 @@ export default function AdminScreen() {
   const [getSeat, setGetSeat] = useState([]);
   
   const fetchData = async () => {
-    await axios.get("http://localhost:3500/home/reserve").then((res) => {
+    await axios.get("https://red-clean-cobra.cyclic.app/home/reserve").then((res) => {
             setGetSeat(res.data);
         })
         .catch((err) => {
@@ -42,7 +42,7 @@ const handlebooked = async (e, item) => {
     e.preventDefault();
     const data = e.currentTarget.id;
     console.log(data);
-    await axios.post("http://localhost:3500/home/admin/reserve/:id",
+    await axios.post("https://red-clean-cobra.cyclic.app/home/admin/reserve/:id",
             {
                 data,
             }

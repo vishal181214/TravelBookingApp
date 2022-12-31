@@ -28,14 +28,11 @@ seatInfoRouter.post('/seatinfo', async(req,res)=>{
 })
 
 seatInfoRouter.get('/getseatinfo/:busId', async(req,res)=>{
-    // console.log(req.params.busId);
  const seatInfo = await seatInfoModel.find({busId:req.params.busId});
  if(seatInfo)
     res.send(seatInfo);
 else
     res.status(404).send({ message: 'Seat is not available'})
-
-    // console.log(seatInfo);
 })
 
 export default seatInfoRouter;

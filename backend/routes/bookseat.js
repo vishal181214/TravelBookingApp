@@ -1,6 +1,5 @@
 import express from 'express';
 import bookSeat from '../models/bookseat.js';
-import authenticate from '../middleware/verifyToken.js';
 const router = express.Router();
 router.get("/reserve",async(req,res) => {
     try{

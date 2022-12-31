@@ -14,7 +14,7 @@ export default function Cards() {
     const auth = localStorage.getItem('user');
     const navigate = useNavigate();
     useEffect(() => {
-        axios.get(`http://localhost:3500/home`).then(res => {
+        axios.get(`https://red-clean-cobra.cyclic.app/home`).then(res => {
             const data = res.data;
             setInfo(data);
         })
@@ -63,7 +63,6 @@ export default function Cards() {
                                 <h2><ElectricalServicesOutlinedIcon /></h2>
                                 <h2><LocationOnOutlinedIcon /></h2>
                             </div>
-                            <p>{item.busId}</p>
                             <Stack direction="row" spacing={5} style={{marginRight:"10%", marginTop:"5%"}}>
                                 {(auth)? <Link to={`/BookedScreen/${item._id}`} style={{textDecoration:"none"}}>
                                 <Button variant="contained" color="success">Booked Now</Button>

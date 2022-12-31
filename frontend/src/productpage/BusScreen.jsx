@@ -21,7 +21,7 @@ export default function BusScreen() {
     const busId = params.id;
     useEffect(() => {
         const getbus = async () => {
-            await axios.get(`http://localhost:3500/home/bus/${busId}`).then(res => {
+            await axios.get(`https://red-clean-cobra.cyclic.app/home/bus/${busId}`).then(res => {
                 const result = res.data;
                 setInfo(result);
             }).catch((error) => {
@@ -32,7 +32,7 @@ export default function BusScreen() {
     }, [busId])
 
     const fetchData = async () => {
-        await axios.get("http://localhost:3500/home/reserve").then((res) => {
+        await axios.get("https://red-clean-cobra.cyclic.app/home/reserve").then((res) => {
                 setGetSeat(res.data);
             })
             .catch((err) => {
@@ -56,7 +56,7 @@ export default function BusScreen() {
     const handlebooked = async (e, item) => {
         e.preventDefault();
         const data = e.currentTarget.id;
-        await axios.post("http://localhost:3500/home/reserve/:id",
+        await axios.post("https://red-clean-cobra.cyclic.app/home/reserve/:id",
                 {
                     data,
                 }

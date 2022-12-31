@@ -15,7 +15,7 @@ export default function LogIn() {
   const navigate = useNavigate();
   const collectData = async ()=> {
     try {
-      const data = await axios.post('http://localhost:3500/home/users/login',{
+      const data = await axios.post('https://red-clean-cobra.cyclic.app/home/users/login',{
         email,
         password,
       });

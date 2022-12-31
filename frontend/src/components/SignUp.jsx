@@ -21,7 +21,7 @@ export default function SignUp() {
   const collectData = async ()=> {
     console.warn(name,email,password);
     try {
-      const data = await axios.post('http://localhost:3500/home/users/signup',{
+      const data = await axios.post('https://red-clean-cobra.cyclic.app/home/users/signup',{
         name,
         email,
         password,

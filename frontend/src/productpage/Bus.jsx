@@ -11,7 +11,7 @@ export default function Bus() {
     const busId = params.id;
     useEffect(() => {
         const getbus = async () => {
-            await axios.get(`http://localhost:3500/home/bus/${busId}`).then(res => {
+            await axios.get(`https://red-clean-cobra.cyclic.app/home/bus/${busId}`).then(res => {
                 const result = res.data;
                 setInfo(result);
             })
