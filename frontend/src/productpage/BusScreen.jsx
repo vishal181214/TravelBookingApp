@@ -1,14 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
-import { Link, useParams } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { Button } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
+import styled from "@emotion/styled";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Footer from '../components/Footer';
+import EventSeatIcon from '@mui/icons-material/EventSeat';
+
+const SeatCont = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  color: ${(props) => props.status === "booked" && "red"}
+`;
 
 export default function BusScreen() {
     const [info, setInfo] = useState([]);
-    const [selectSeat, setSelectSeat] = useState([]);
-    const [count, setCount] = useState(0);
-    const [seatinfo, setSeatInfo] = useState([]);
+    const [getSeat, setGetSeat] = useState([]);
     const params = useParams();
     const busId = params.id;
     useEffect(() => {
@@ -16,50 +24,55 @@ export default function BusScreen() {
             await axios.get(`http://localhost:3500/home/bus/${busId}`).then(res => {
                 const result = res.data;
                 setInfo(result);
-                console.log(result);
-            })
-                .catch((error) => {
-                    toast.error("Bus is Not Found!");
+            }).catch((error) => {
+                    toast.error(`Bus is Not Found!`);
                 })
         }
         getbus();
-
-        const seatInfo = async () =>{
-            const bus = info.busId;
-            await axios.get(`http://localhost:3500/home/getseatinfo/${bus}`).then(res=>{
-                const seatData = res.data;
-                setSeatInfo(seatData);
-            })
-        }
-        seatInfo();
     }, [busId])
-    const seatHandle = (seat) => {
-        const seatData = seat;
-        const ans = selectSeat.includes(seatData);
-        if (ans) {
-            setSelectSeat(selectSeat.filter((item) => item !== seatData));
+
+    const fetchData = async () => {
+        await axios.get("http://localhost:3500/home/reserve").then((res) => {
+                setGetSeat(res.data);
+            })
+            .catch((err) => {
+                toast.error("Sorry unable to load");
+            });
+    }
+
+    useEffect(() => {
+        fetchData();
+        console.log("1");
+    }, []);
+
+    const changeColor = (e, item) => {
+        if ((item === "booked")) {
+            e.target.style.color = "red";
         } else {
-            selectSeat.push(seatData);
+            e.target.style.color = "black";
         }
-        setCount(selectSeat.length);
-    }
-    const handleSeats = async () =>{
-        let data = [selectSeat, busId];
-        localStorage.setItem("seatInfo", JSON.stringify(data));
-       const seatData = await axios.post(`http://localhost:3500/home/seatinfo`,{
-        selectSeat,
-        busId
-       })
-       if(seatData)
-       console.log("successfull");
-    }
+    };
+
+    const handlebooked = async (e, item) => {
+        e.preventDefault();
+        const data = e.currentTarget.id;
+        await axios.post("http://localhost:3500/home/reserve/:id",
+                {
+                    data,
+                }
+            ).then((res) => {
+                toast.success(res.data.msg);
+                changeColor(e, res.data.status);
+                setTimeout(()=>{
+                    window.location.reload(true);
+                },4500)
+            })
+            .catch((err) => {
+                toast.error(err);
+            });
+    };
     return (
         <>
-        {
-            seatinfo.map((item)=>{
-                console.log(item.bookedSeats);
-            })
-        }
             <div className="travelInfo">
                 <h3>{info.name}</h3>
                 <div className='travelSD'>
@@ -84,98 +97,72 @@ export default function BusScreen() {
                 <div className="lowerseats">
                     <table className='busTable'>
                         <thead></thead>
-                        <tbody>
-                            <tr style={{ height: "5rem" }}>
-                                <td onClick={() => { seatHandle('A11') }}>
-                                    <div className="seat"
-                                        style={{ backgroundColor: ((selectSeat.includes('A11'))) ? "tomato" : " " }}></div>
-                                </td>
-                                <td onClick={() => { seatHandle("A12") }} style={{ width: "5rem" }}>
-                                    <div className="seat"
-                                        style={{ backgroundColor: ((selectSeat.includes('A12'))) ? "tomato" : " " }}></div>
-                                </td>
-                                <td onClick={() => { seatHandle("A13") }}>
-                                    <div className="seat"
-                                        style={{ backgroundColor: ((selectSeat.includes('A13'))) ? "tomato" : " " }}></div>
-                                </td>
-                                <td onClick={() => { seatHandle("A14") }}>
-                                    <div className="seat"
-                                        style={{ backgroundColor: ((selectSeat.includes('A14'))) ? "tomato" : " " }}></div>
-                                </td>
-                            </tr>
-                            <tr style={{ height: "5rem" }}>
-                                <td onClick={() => { seatHandle('B11') }}>
-                                    <div className="seat"
-                                        style={{ backgroundColor: ((selectSeat.includes('B11'))) ? "tomato" : " " }}></div>
-                                </td>
-                                <td onClick={() => { seatHandle("B12") }} style={{ width: "5rem" }}>
-                                    <div className="seat"
-                                        style={{ backgroundColor: ((selectSeat.includes('B12'))) ? "tomato" : " " }}></div>
-                                </td>
-                                <td onClick={() => { seatHandle("B13") }}>
-                                    <div className="seat"
-                                        style={{ backgroundColor: ((selectSeat.includes('B13'))) ? "tomato" : " " }}></div>
-                                </td>
-                                <td onClick={() => { seatHandle("B14") }}>
-                                    <div className="seat"
-                                        style={{ backgroundColor: ((selectSeat.includes('B14'))) ? "tomato" : " " }}></div>
-                                </td>
-                            </tr>
-                            <tr style={{ height: "5rem" }}>
-                                <td onClick={() => { seatHandle('C11') }}>
-                                    <div className="seat"
-                                        style={{ backgroundColor: ((selectSeat.includes('C11'))) ? "tomato" : " " }}></div>
-                                </td>
-                                <td onClick={() => { seatHandle("C12") }} style={{ width: "5rem" }}>
-                                    <div className="seat"
-                                        style={{ backgroundColor: ((selectSeat.includes('C12'))) ? "tomato" : " " }}></div>
-                                </td>
-                                <td onClick={() => { seatHandle("C13") }}>
-                                    <div className="seat"
-                                        style={{ backgroundColor: ((selectSeat.includes('C13'))) ? "tomato" : " " }}></div>
-                                </td>
-                                <td onClick={() => { seatHandle("C14") }}>
-                                    <div className="seat"
-                                        style={{ backgroundColor: ((selectSeat.includes('C14'))) ? "tomato" : " " }}></div>
-                                </td>
-                            </tr>
-                            <tr style={{ height: "5rem" }}>
-                                <td onClick={() => { seatHandle('D11') }}>
-                                    <div className="seat"
-                                        style={{ backgroundColor: ((selectSeat.includes('D11'))) ? "tomato" : " " }}></div>
-                                </td>
-                                <td onClick={() => { seatHandle("D12") }} style={{ width: "5rem" }}>
-                                    <div className="seat"
-                                        style={{ backgroundColor: ((selectSeat.includes('D12'))) ? "tomato" : " " }}></div>
-                                </td>
-                                <td onClick={() => { seatHandle("D13") }}>
-                                    <div className="seat"
-                                        style={{ backgroundColor: ((selectSeat.includes('D13'))) ? "tomato" : " " }}></div>
-                                </td>
-                                <td onClick={() => { seatHandle("D14") }}>
-                                    <div className="seat"
-                                        style={{ backgroundColor: ((selectSeat.includes('D14'))) ? "tomato" : " " }}></div>
-                                </td>
-                            </tr>
-                            <tr style={{ height: "5rem" }}>
-                                <td onClick={() => { seatHandle('E11') }}>
-                                    <div className="seat"
-                                        style={{ backgroundColor: ((selectSeat.includes('E11'))) ? "tomato" : " " }}></div>
-                                </td>
-                                <td onClick={() => { seatHandle("E12") }} style={{ width: "5rem" }}>
-                                    <div className="seat"
-                                        style={{ backgroundColor: ((selectSeat.includes('E12'))) ? "tomato" : " " }}></div>
-                                </td>
-                                <td onClick={() => { seatHandle("E13") }}>
-                                    <div className="seat"
-                                        style={{ backgroundColor: ((selectSeat.includes('E13'))) ? "tomato" : " " }}></div>
-                                </td>
-                                <td onClick={() => { seatHandle("E14") }}>
-                                    <div className="seat"
-                                        style={{ backgroundColor: ((selectSeat.includes('E14'))) ? "tomato" : " " }}></div>
-                                </td>
-                            </tr>
-                        </tbody>
+                        <div style={{width:"20vw",display:"flex", flexDirection:"row", marginBottom:"10%",justifyContent:"space-evenly"}}>
+                            {
+                                getSeat.slice(0,5).map((item, index) => {
+                                    return (
+                                        <SeatCont key={index + 1} status={item.status} id={index + 1} onClick={(e) => handlebooked(e)}>
+                                            <EventSeatIcon style={{height:"40px",width:"35px"}}/>
+                                        </SeatCont>
+                                    )
+                                })
+                            }
+                        </div>
+                        <div style={{width:"20vw",display:"flex", flexDirection:"row", marginBottom:"10%", justifyContent:"space-evenly"}}>
+                            {
+                                getSeat.slice(5,10).map((item, index) => {
+                                    return (
+                                        <SeatCont key={index + 6} status={item.status} id={index + 6} onClick={handlebooked}>
+                                            <EventSeatIcon style={{height:"40px",width:"35px"}}/>
+                                        </SeatCont>
+                                    )
+                                })
+                            }
+                        </div>
+                        <div style={{width:"20vw",display:"flex", flexDirection:"row", marginBottom:"10%", justifyContent:"space-evenly"}}>
+                            {
+                                getSeat.slice(10,15).map((item, index) => {
+                                    return (
+                                        <SeatCont key={index + 11} status={item.status} id={index + 11} onClick={handlebooked}>
+                                            <EventSeatIcon style={{height:"40px",width:"35px"}}/>
+                                        </SeatCont>
+                                    )
+                                })
+                            }
+                        </div>
+                        <div style={{width:"20vw",display:"flex", flexDirection:"row", marginBottom:"10%", justifyContent:"space-evenly"}}>
+                            {
+                                getSeat.slice(15,20).map((item, index) => {
+                                    return (
+                                        <SeatCont key={16 + index} status={item.status} id={index + 16} onClick={handlebooked}>
+                                            <EventSeatIcon style={{height:"40px",width:"35px"}}/>
+                                        </SeatCont>
+                                    )
+                                })
+                            }
+                        </div>
+                        <div style={{width:"20vw",display:"flex", flexDirection:"row", marginBottom:"10%", justifyContent:"space-evenly"}}>
+                            {
+                                getSeat.slice(20,25).map((item, index) => {
+                                    return (
+                                        <SeatCont key={21 + index} status={item.status} id={index + 21} onClick={handlebooked}>
+                                            <EventSeatIcon style={{height:"40px",width:"35px"}}/>
+                                        </SeatCont>
+                                    )
+                                })
+                            }
+                        </div>
+                        <div style={{width:"20vw",display:"flex", flexDirection:"row", marginBottom:"10%", justifyContent:"space-evenly"}}>
+                            {
+                                getSeat.slice(25,30).map((item, index) => {
+                                    return (
+                                        <SeatCont key={26 + index} status={item.status} id={index + 26} onClick={handlebooked}>
+                                            <EventSeatIcon style={{height:"40px",width:"35px"}}/>
+                                        </SeatCont>
+                                    )
+                                })
+                            }
+                        </div>
                     </table>
                 </div>
                 <div className='inditification'>
@@ -192,28 +179,10 @@ export default function BusScreen() {
                             </tr>
                         </tbody>
                     </table>
-                    <div style={{ margin: "10% 0%" }}>
-                        <h6 style={{ margin: "5% 0%" }}>Seats: {selectSeat.length}</h6>
-                        <h6 style={{ margin: "5% 0%" }}>Amount: {selectSeat.length * info.fare}</h6>
-                        {
-                            (selectSeat.length > 0) ?
-                                // <Link to={`/userdetails/${selectSeat}`}>
-                                    <Button variant="primary" type="button" onClick={handleSeats} style={{ margin: "5% 0%" }}>Booked</Button>
-                                // </Link>
-                                : 
-                                // <Link href="#">
-                                    <Button variant="primary" type="button" disabled style={{ margin: "5% 0%" }}>Booked</Button>
-                                // </Link>
-                        }
-                    </div>
                 </div>
             </div>
+            <ToastContainer/>
+            <Footer />
         </>
     )
 }
-{/* <Link to={`/userdetails/${selectSeat}`}>
-    <Button variant="primary" type="button" style={{ margin: "5% 0%" }}>Booked</Button>
-</Link>
-                                : <Link href="#">
-    <Button variant="primary" type="button" disabled style={{ margin: "5% 0%" }}>Booked</Button>
-</Link> */}

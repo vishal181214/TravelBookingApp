@@ -8,7 +8,6 @@ import Footer from './Footer';
 import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import AdminScreen from './AdminScreen';
 
 export default function LogIn() {
   const [email, setEmail] = useState("");

@@ -23,7 +23,7 @@ export default function Navigation() {
                         </Nav>
                         <Nav>
                             <Nav.Link href='/'>Home</Nav.Link>
-                            <Nav.Link href="/userdetails">Buses</Nav.Link>
+                            <Nav.Link href="/">Buses</Nav.Link>
                             <Nav.Link href="#">Contact</Nav.Link>
                             <Nav.Link href="#">About</Nav.Link>
                             { result ? <><Nav.Link onClick={logout} href="/LogIn">LogOut</Nav.Link> 

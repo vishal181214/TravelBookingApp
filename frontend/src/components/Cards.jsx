@@ -11,6 +11,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 export default function Cards() {
     const [info, setInfo] = useState([]);
+    const auth = localStorage.getItem('user');
     const navigate = useNavigate();
     useEffect(() => {
         axios.get(`http://localhost:3500/home`).then(res => {
@@ -64,9 +65,12 @@ export default function Cards() {
                             </div>
                             <p>{item.busId}</p>
                             <Stack direction="row" spacing={5} style={{marginRight:"10%", marginTop:"5%"}}>
-                            <Link to={`/BookedScreen/${item._id}`} style={{textDecoration:"none"}}>
+                                {(auth)? <Link to={`/BookedScreen/${item._id}`} style={{textDecoration:"none"}}>
                                 <Button variant="contained" color="success">Booked Now</Button>
                             </Link>
+                                :<Link to={`/LogIn?BookedScreen/${item._id}`} style={{textDecoration:"none"}}>
+                                <Button variant="contained" color="success">Booked Now</Button>
+                            </Link>}
                             </Stack>
                         </div>
                         

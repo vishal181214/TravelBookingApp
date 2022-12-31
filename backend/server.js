@@ -4,6 +4,7 @@ import busRouter from "./routes/busRoute.js";
 import userRouter from "./routes/userRoute.js";
 import bookingRouter from "./routes/bookingRoute.js";
 import seatInfoRouter from './routes/seatInfoRoute.js'
+import bookseat from "./routes/bookseat.js";
 import './db/conn.js'
 const app = express();
 const port = process.env.PORT || 3500;
@@ -17,10 +18,7 @@ app.use('/home', busRouter);
 app.use('/home/users', userRouter);
 app.use('/home', bookingRouter)
 app.use('/home',seatInfoRouter)
-
-// app.use((error, req, res, next)=>{
-//     res.status(500).send({ message:error.message});
-// })
+app.use("/home", bookseat)
 
 app.listen(port, ()=>{
     console.log(`server Statred at ${port}`);

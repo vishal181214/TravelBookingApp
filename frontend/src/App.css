@@ -162,11 +162,11 @@
 }
 
 .booked{
-  background-color: tomato;
+  background-color: red;
 }
 
 .available{
-  background-color: #8c8c8e;
+  background-color: black;
 }
 
 .busTable{
@@ -234,8 +234,16 @@
 .hrstyle{
   width:10vw;
   height:4px;
-  color:#fa9805;
-  background-color:#fa9805;
+  color:orange;
+  background-color:orange;
   margin: 1.5% 3% 0% 3%;
+}
+
+.seatDesign{
+  width:"20vw";
+  display:"flex"; 
+  flex-direction:"row"; 
+  margin-bottom:"10%";
+  justify-content:"space-evenly";
 }
 

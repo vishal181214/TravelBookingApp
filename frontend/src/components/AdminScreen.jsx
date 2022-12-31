@@ -1,76 +1,152 @@
 import React, { useEffect, useState } from 'react'
-import Table from 'react-bootstrap/Table';
 import Navigation from './Navigation';
-import Button from 'react-bootstrap/Button';
 import axios from 'axios';
+import styled from "@emotion/styled";
+import EventSeatIcon from '@mui/icons-material/EventSeat';
+import Footer from './Footer';
+import { ToastContainer, toast } from 'react-toastify';
+
+
+const SeatCont = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  color: ${(props) => props.status === "booked" && "red"}
+`;
 
 export default function AdminScreen() {
-  const [info, setInfo] = useState([]);
-  const [details,setDetails] = useState();
-  useEffect(() => {
-    axios.get(`http://localhost:3500/home/getbookingdetails`).then(res => {
-      const data = res.data;
-      setInfo(data);
-    })
-      .catch((error) => console.log(error));
-  }, [])
+  const [getSeat, setGetSeat] = useState([]);
+  
+  const fetchData = async () => {
+    await axios.get("http://localhost:3500/home/reserve").then((res) => {
+            setGetSeat(res.data);
+        })
+        .catch((err) => {
+            toast.error("Sorry unable to load");
+        });
+}
 
-  const handleBookinStatus = (mail,booked) =>{
-    axios.put(`http://localhost:3500/home/getbookingdetails`,{
-      mail,
-      booked
-    }).then(res => {
-      const num = res.data;
-      setDetails(num);
-    })
-      .catch((error) => console.log(error));
-  }
+useEffect(() => {
+    fetchData();
+}, []);
+
+const changeColor = (e, item) => {
+    if ((item === "booked")) {
+        e.target.style.color = "red";
+    } else {
+        e.target.style.color = "black";
+    }
+};
+
+const handlebooked = async (e, item) => {
+    e.preventDefault();
+    const data = e.currentTarget.id;
+    console.log(data);
+    await axios.post("http://localhost:3500/home/admin/reserve/:id",
+            {
+                data,
+            }
+        ).then((res) => {
+            toast.success(res.data.msg);
+            changeColor(e, res.data.status);
+            window.location.reload(true)
+        })
+        .catch((err) => {
+            window.alert(`${err}`);
+            toast.error(err);
+        });
+};
   return (
     <div>
       <Navigation />
       <h1 style={{ textAlign: "center", margin: "3%" }}>Booking Details</h1>
-      <Table style={{ width: "80vw", marginLeft: "auto", marginRight: "auto", textAlign: "center" }}>
-        <thead>
-          <tr>
-            <th>Sr.NO</th>
-            <th>Booking Id</th>
-            <th>Passenger Name</th>
-            <th>Email</th>
-            <th>Mob. no</th>
-            <th>Source</th>
-            <th>Destination</th>
-            <th>Seat Number</th>
-            <th>Bus Id</th>
-            <th>Bus Agency Name</th>
-            <th>Fare</th>
-            <th>Seat Status</th>
-            <th>Booking Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            info.map((item, index) => {
-              return (
-                <tr key={index}>
-                  <td>{index+1}</td>
-                  <td>{item._id}</td>
-                  <td>{item.userDetails}</td>
-                  <td>{item.email}</td>
-                  <td>{item.number}</td>
-                  <td>{item.source}</td>
-                  <td>{item.destination}</td>
-                  <td>{item.seatNo}</td>
-                  <td>{item.busId}</td>
-                  <td>{item.compname}</td>
-                  <td>{item.fare}</td>
-                  <td><Button variant="secondary" onClick={handleBookinStatus(item.email,item.isBooked)}>Confirm</Button>{' '}</td>
-                  <td>{(item.isBooked)? <Button variant="success">Booked</Button> : <p>Pending</p>}</td>
-                </tr>
-              )
-            })
-          }
-        </tbody>
-      </Table>
+      <div className='busseat'>
+                <div className="lowerseats">
+                        <div style={{width:"20vw",display:"flex", flexDirection:"row", marginBottom:"10%", marginTop:"10%",justifyContent:"space-evenly"}}>
+                            {
+                                getSeat.slice(0,5).map((item, index) => {
+                                    return (
+                                        <SeatCont key={index + 1} status={item.status} id={index + 1} onClick={(e) => handlebooked(e)}>
+                                            <EventSeatIcon style={{height:"40px",width:"35px"}}/>
+                                        </SeatCont>
+                                    )
+                                })
+                            }
+                        </div>
+                        <div style={{width:"20vw",display:"flex", flexDirection:"row", marginBottom:"10%", justifyContent:"space-evenly"}}>
+                            {
+                                getSeat.slice(5,10).map((item, index) => {
+                                    return (
+                                        <SeatCont key={index + 6} status={item.status} id={index + 6} onClick={handlebooked}>
+                                            <EventSeatIcon style={{height:"40px",width:"35px"}}/>
+                                        </SeatCont>
+                                    )
+                                })
+                            }
+                        </div>
+                        <div style={{width:"20vw",display:"flex", flexDirection:"row", marginBottom:"10%", justifyContent:"space-evenly"}}>
+                            {
+                                getSeat.slice(10,15).map((item, index) => {
+                                    return (
+                                        <SeatCont key={index + 11} status={item.status} id={index + 11} onClick={handlebooked}>
+                                            <EventSeatIcon style={{height:"40px",width:"35px"}}/>
+                                        </SeatCont>
+                                    )
+                                })
+                            }
+                        </div>
+                        <div style={{width:"20vw",display:"flex", flexDirection:"row", marginBottom:"10%", justifyContent:"space-evenly"}}>
+                            {
+                                getSeat.slice(15,20).map((item, index) => {
+                                    return (
+                                        <SeatCont key={16 + index} status={item.status} id={index + 16} onClick={handlebooked}>
+                                            <EventSeatIcon style={{height:"40px",width:"35px"}}/>
+                                        </SeatCont>
+                                    )
+                                })
+                            }
+                        </div>
+                        <div style={{width:"20vw",display:"flex", flexDirection:"row", marginBottom:"10%", justifyContent:"space-evenly"}}>
+                            {
+                                getSeat.slice(20,25).map((item, index) => {
+                                    return (
+                                        <SeatCont key={21 + index} status={item.status} id={index + 21} onClick={handlebooked}>
+                                            <EventSeatIcon style={{height:"40px",width:"35px"}}/>
+                                        </SeatCont>
+                                    )
+                                })
+                            }
+                        </div>
+                        <div style={{width:"20vw",display:"flex", flexDirection:"row", marginBottom:"10%", justifyContent:"space-evenly"}}>
+                            {
+                                getSeat.slice(25,30).map((item, index) => {
+                                    return (
+                                        <SeatCont key={26 + index} status={item.status} id={index + 26} onClick={handlebooked}>
+                                            <EventSeatIcon style={{height:"40px",width:"35px"}}/>
+                                        </SeatCont>
+                                    )
+                                })
+                            }
+                        </div>
+                </div>
+                <div className='inditification'>
+                    <table>
+                        <thead></thead>
+                        <tbody>
+                            <tr>
+                                <td><div className='idinti booked'></div></td>
+                                <td>Booked</td>
+                            </tr>
+                            <tr>
+                                <td><div className='idinti available'></div></td>
+                                <td>Available</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <ToastContainer/>
+          <Footer/>
     </div>
   )
 }

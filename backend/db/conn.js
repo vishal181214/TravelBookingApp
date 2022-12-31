@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 mongoose.set('strictQuery', true);
-mongoose.connect('mongodb://localhost:27017/MyTraveller',{ useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect('mongodb+srv://vishalgai:UKkUknD3ztBhSxdV@cluster0.apnmfbt.mongodb.net/mytraveller?retryWrites=true&w=majority',{ useNewUrlParser: true, useUnifiedTopology: true })
 .then(()=>{
     console.log('Connected to db');
 })

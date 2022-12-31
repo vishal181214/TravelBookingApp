@@ -33,7 +33,7 @@ export default function SignUp() {
     }
     if(data)
     {
-      navigate('/BookedScreen');
+      navigate('/BookedScreen/63a6a6f3d0435bdb01b27f84');
     }
   }
   return (

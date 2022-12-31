@@ -31,6 +31,7 @@ userRouter.post("/login", async (req, res) => {
     let user = await userInfo.findOne({ email: req.body.email });
     if (user) {
       if (bcrypt.compareSync(req.body.password, user.password)) {
+        console.log(user);
         res.send({
           _id: user._id,
           name: user.name,
